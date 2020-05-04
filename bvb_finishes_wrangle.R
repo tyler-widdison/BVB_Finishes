@@ -264,8 +264,39 @@ df <- df[df$X!=1,]
 df$Player.1 <- df$Player
 df$Partner.1 <- df$Partner
 
+#Type of tournament at FIVB level column
+df$Type <- 
+  ifelse(grepl("Grand Slam", df$Tournament), 'Grand Slam',
+         ifelse(grepl("Chelem", df$Tournament), 'Grand Slam',
+                ifelse(grepl("Goodwill", df$Tournament), 'Goodwill',
+                       ifelse(grepl("KATARA", df$Tournament), 'Four Star',
+                              ifelse(grepl("Katara", df$Tournament), 'Four Star',
+                                     ifelse(grepl("Major", df$Tournament), 'Major',
+                                            ifelse(grepl("Presidents Cup", df$Tournament), 'Presidents Cup',
+                                                   ifelse(grepl("FIVB", df$Tournament) & (grepl("Open", df$Tournament)),'Open',
+                                                          ifelse(grepl("FIVB", df$Tournament) & (grepl("Challeng", df$Tournament)),'Challenger', 
+                                                                 ifelse(grepl("FIVB", df$Tournament) & (grepl("World Series", df$Tournament)),'World Series',
+                                                                        ifelse(grepl("FIVB", df$Tournament) & (grepl("World Championship", df$Tournament)),'World Championship',
+                                                                               ifelse(grepl("FIVB", df$Tournament) & (grepl("Olympic", df$Tournament)),'Olympics', 
+                                                                                      ifelse(grepl("FIVB", df$Tournament) & (grepl("Satellite", df$Tournament)),'Satellite',
+                                                                                             ifelse(grepl("FIVB", df$Tournament) & (grepl("Continental", df$Tournament)),'Continental',
+                                                                                                    ifelse(grepl("FIVB", df$Tournament) & (grepl("Junior", df$Tournament)),'Junior',
+                                                                                                           ifelse(grepl("FIVB", df$Tournament) & (grepl("Youth", df$Tournament)),'Youth',
+                                                                                                                  ifelse(grepl("FIVB", df$Tournament) & (grepl("World Tour", df$Tournament)),'World Tour',
+                                                                                                                         ifelse(grepl("FIVB", df$Tournament) & (grepl("One Star", df$Tournament)),'One Star',
+                                                                                                                                ifelse(grepl("FIVB", df$Tournament) & (grepl("Two Star", df$Tournament)),'Two Star',
+                                                                                                                                       ifelse(grepl("FIVB", df$Tournament) & (grepl("Three Star", df$Tournament)),'Three Star',
+                                                                                                                                              ifelse(grepl("FIVB", df$Tournament) & (grepl("Four Star", df$Tournament)),'Four Star',
+                                                                                                                                                     ifelse(grepl("FIVB", df$Tournament) & (grepl("Five Star", df$Tournament)),'Five Star',
+                                                                                                                                                            ifelse(grepl("Youth", df$Tournament) & (grepl("Olympic", df$Tournament)),'Youth Olympics',
+                                                                                                                                                                   NA)))))))))))))))))))))))
+df$Type[is.na(df$Type)] <- 'Other'
+
+df <- df %>% rename(Circuit = Circut)
+
+
 #melting
-w_df <- reshape2::melt(df, id.vars = c('X','Finish','Tournament', 'Gender', 'Circut', 'Date', 'Country', 'Seed', 'Points', 'Winnings', 'Player.1', 'Partner.1'))
+w_df <- reshape2::melt(df, id.vars = c('X','Finish','Tournament', 'Gender', 'Circut', 'Date', 'Country', 'Seed', 'Points', 'Winnings', 'Player.1', 'Partner.1', 'Type'))
 w_df$Partner <- ifelse(w_df$value == w_df$Player.1, w_df$Partner.1, w_df$Player.1)
 #get rid of the new columns after melt
 w_df$Partner.1 <- NULL
